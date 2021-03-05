@@ -1,0 +1,11 @@
+// app global css in SCSS form
+
+@import "vue-select/src/scss/vue-select.scss";
+
+#vs1__combobox{
+    height: 50px;
+}
+.my-card{
+    width: 100%;
+    max-width: 250px;
+}
