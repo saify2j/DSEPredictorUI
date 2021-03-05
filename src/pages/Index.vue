@@ -17,12 +17,13 @@
     </div>
     <div class="row q-mt-md">
       <div class="col-8">
-        <q-table fixed
+        <q-table 
         title="Selected Companies"
         :data= 'data'
         :columns='columns'
         row-key="name"
         @row-click="onRowClick"
+        style="position:fixed;width:31%"
         >
         <template v-if="!isAnalyticsHidden" v-slot:top-right>
         <q-btn
@@ -107,6 +108,7 @@ export default {
     this.columns.push(
       { name: 'predictedPrice', align: 'center', label: 'Predicted Closing Price', field: 'predictedPrice', sortable: true }
     )
+    this.isAnalyticsHidden = true;
   }
   },
   data(){
@@ -139,7 +141,37 @@ export default {
           closingPrice: '1220',
         },
         {
-          name: 'City Bank',
+          name: 'A Company',
+          openingPrice: '1110',
+          closingPrice: '1120',
+        },
+        {
+          name: 'B Company',
+          openingPrice: '1110',
+          closingPrice: '1120',
+        },
+        {
+          name: 'C Company',
+          openingPrice: '1110',
+          closingPrice: '1120',
+        },
+        {
+          name: 'D Company',
+          openingPrice: '1110',
+          closingPrice: '1120',
+        },
+        {
+          name: 'E Company',
+          openingPrice: '1110',
+          closingPrice: '1120',
+        },
+        {
+          name: 'F Company',
+          openingPrice: '1110',
+          closingPrice: '1120',
+        },
+        {
+          name: 'G Company',
           openingPrice: '1110',
           closingPrice: '1120',
         },
