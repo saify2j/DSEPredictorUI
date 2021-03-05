@@ -1,28 +1,43 @@
 <template>
   <q-page class="flex flex-center">
-    <!-- <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-full.svg"
-    > -->
-    <div class="q-pa-lg" style="width:900px;">
-    <div class="row items-center">
-      <div class="col-8">
-        <v-select :clearable="false" @input='changedValue' :options='companies' label="name" placeholder="Select Companies"></v-select>
+    <div class="q-pa-none" style="width:900px;">
+    <div class="row">
+      <div id="img-header" class="col-12">
+         <img style="width:100%;"
+          alt="DSE PREDICTION!"
+          src="~assets/back-top.svg"
+         >
       </div>
-      
+    </div>
+    <div class="row"> 
+      <div class="col-12" style="width:70%;margin-left:10%" >
+        <v-select prepend-icon="edit"  :clearable="false" @input='changedValue' :options='companies' label="name" placeholder="Select Companies">
+        </v-select>
+      </div>
     </div>
     <div class="row q-mt-md">
       <div class="col-8">
-        <q-table
+        <q-table fixed
         title="Selected Companies"
         :data= 'data'
         :columns='columns'
         row-key="name"
         @row-click="onRowClick"
+        >
+        <template v-if="!isAnalyticsHidden" v-slot:top-right>
+        <q-btn
+          color="secondary"
+          icon-right="analytics"
+          label="Generate Prediction"
+          no-caps
+          @click="addPredictedColumn"
         />
+      </template>
+        </q-table>
       </div>
       <div class="col-4 col-md q-ml-md">
-      <q-card v-if="!isHidden" class="my-card bg-teal-2 text-black">
+      <q-card  class="my-card text-black"> 
+        <!-- v-if="!isHidden" -->
       <q-card-section>
         <div class="text-h6">{{ company_title }}</div>
       </q-card-section>
@@ -33,10 +48,24 @@
       <q-separator dark />
 
       <q-card-actions>
-        <q-btn flat>Show Details</q-btn>
+        <q-btn flat v-if="!isHidden"  @click="medium = true">Show Details</q-btn>
         <!-- <q-btn flat>Action 2</q-btn> -->
       </q-card-actions>
     </q-card>
+        <q-dialog v-model="medium">
+          <q-card style="width: 700px; max-width: 80vw;">
+            <q-card-section>
+              <div class="text-h6">{{company_title}}</div>
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+              <Chart/>
+            </q-card-section>
+            <q-card-actions align="right" class="bg-white text-teal">
+              <q-btn flat label="Download"/>
+              <q-btn flat label="OK" v-close-popup />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </div>
     </div>
 
@@ -45,17 +74,25 @@
 </template>
 
 <script>
+import Chart from './Chart.vue';
 export default {
+  components: { Chart },
   name: 'PageIndex',
   methods: {
     changedValue: function(value) {
       this.select = 0;
-    //receive the value selected (return an array if is multiple)
-     this.data.push({
-          name: value.name,
-          openingPrice: value.openingPrice,
-          closingPrice: value.closingPrice,
-        })
+      if(this.data.includes(value)){
+          alert('Already selected!')
+      }
+      else {
+        this.data.push({
+            name: value.name,
+            openingPrice: value.openingPrice,
+            closingPrice: value.closingPrice,
+          })
+        this.isAnalyticsHidden = false;
+      }
+      
      //alert(value)
   },
   onRowClick: function(evt, row){
@@ -65,13 +102,20 @@ export default {
     this.company_details = 'Opening Price: '+ row.openingPrice +
                            'Closing Price: ' + row.closingPrice;
 
+  },
+  addPredictedColumn: function(){
+    this.columns.push(
+      { name: 'predictedPrice', align: 'center', label: 'Predicted Closing Price', field: 'predictedPrice', sortable: true }
+    )
   }
   },
   data(){
     return {
       company_title:'',
-      company_details:'',
+      company_details:'Select a company to see details!',
       isHidden: true,
+      isAnalyticsHidden: true,
+      medium: false,
       columns: [
         {
           name: 'name',

@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="bg-white text-teal">
-        <q-toolbar-title>
+        <q-toolbar-title style="margin-left:30px;">
           DSE Prediction!<br>
           <p style="font-size:12px;">by BSSE09</p>
         </q-toolbar-title>
