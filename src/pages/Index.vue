@@ -23,7 +23,7 @@
         :columns='columns'
         row-key="name"
         @row-click="onRowClick"
-        style="position:fixed;width:31%"
+        style="position:relative;width:100%"
         >
         <template v-if="!isAnalyticsHidden" v-slot:top-right>
         <q-btn
@@ -33,7 +33,13 @@
           no-caps
           @click="addPredictedColumn"
         />
-      </template>
+        </template>
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete"></q-btn>
+            </q-td>          
+          </template>
+
         </q-table>
       </div>
       <div class="col-4 col-md q-ml-md">
@@ -49,7 +55,8 @@
       <q-separator dark />
 
       <q-card-actions>
-        <q-btn flat v-if="!isHidden"  @click="medium = true">Show Details</q-btn>
+        <q-btn flat v-if="!isHidden"  @click="medium = true">Bar</q-btn>
+        <q-btn flat v-if="!isHidden"  @click="ohlc_chart = true">OHLC</q-btn>
         <!-- <q-btn flat>Action 2</q-btn> -->
       </q-card-actions>
     </q-card>
@@ -62,7 +69,19 @@
               <Chart/>
             </q-card-section>
             <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="Download"/>
+              <q-btn flat label="OK" v-close-popup />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+        <q-dialog v-model="ohlc_chart">
+          <q-card style="width: 700px; max-width: 80vw;">
+            <q-card-section>
+              <div class="text-h6">{{company_title}}</div>
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+              <ChartOHLC/>
+            </q-card-section>
+            <q-card-actions align="right" class="bg-white text-teal">
               <q-btn flat label="OK" v-close-popup />
             </q-card-actions>
           </q-card>
@@ -76,8 +95,9 @@
 
 <script>
 import Chart from './Chart.vue';
+import ChartOHLC from './ChartOHLC.vue';
 export default {
-  components: { Chart },
+  components: { Chart, ChartOHLC },
   name: 'PageIndex',
   methods: {
     changedValue: function(value) {
@@ -118,7 +138,9 @@ export default {
       isHidden: true,
       isAnalyticsHidden: true,
       medium: false,
+      ohlc_chart: false,
       columns: [
+        { name: 'actions', label: 'Actions', field: '', align:'center' },
         {
           name: 'name',
           required: true,
