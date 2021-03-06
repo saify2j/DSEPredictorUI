@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="q-pa-none" style="width:900px;">
+    <div class="q-pa-none" style="width:960px;">
     <div class="row">
       <div id="img-header" class="col-12">
          <img style="width:100%;"
@@ -9,7 +9,8 @@
          >
       </div>
     </div>
-    <div class="row"> 
+    <CompanyList/>
+    <div class="row q-mt-md"> 
       <div class="col-12" style="width:70%;margin-left:10%" >
         <v-select prepend-icon="edit"  :clearable="false" @input='changedValue' :options='companies' label="name" placeholder="Select Companies">
         </v-select>
@@ -36,7 +37,7 @@
         </template>
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
-              <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete"></q-btn>
+              <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="remove_circle_outline"></q-btn>
             </q-td>          
           </template>
 
@@ -51,9 +52,7 @@
       <q-card-section>
        <p> {{ company_details }} </p>
       </q-card-section>
-
       <q-separator dark />
-
       <q-card-actions>
         <q-btn flat v-if="!isHidden"  @click="medium = true">Bar</q-btn>
         <q-btn flat v-if="!isHidden"  @click="ohlc_chart = true">OHLC</q-btn>
@@ -61,9 +60,9 @@
       </q-card-actions>
     </q-card>
         <q-dialog v-model="medium">
-          <q-card style="width: 700px; max-width: 80vw;">
+          <q-card style="width: 900px; max-width: 80vw;">
             <q-card-section>
-              <div class="text-h6">{{company_title}}</div>
+              <div class="text-h6">{{company_title}} - Open-High-Low-Close Chart</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
               <Chart/>
@@ -74,7 +73,7 @@
           </q-card>
         </q-dialog>
         <q-dialog v-model="ohlc_chart">
-          <q-card style="width: 700px; max-width: 80vw;">
+          <q-card style="width: 900px; max-width: 80vw;">
             <q-card-section>
               <div class="text-h6">{{company_title}}</div>
             </q-card-section>
@@ -88,7 +87,6 @@
         </q-dialog>
       </div>
     </div>
-
   </div>
   </q-page>
 </template>
@@ -96,8 +94,9 @@
 <script>
 import Chart from './Chart.vue';
 import ChartOHLC from './ChartOHLC.vue';
+import CompanyList from '../components/CompanyList.vue';
 export default {
-  components: { Chart, ChartOHLC },
+  components: { Chart, ChartOHLC, CompanyList },
   name: 'PageIndex',
   methods: {
     changedValue: function(value) {
@@ -113,23 +112,25 @@ export default {
           })
         this.isAnalyticsHidden = false;
       }
-      
      //alert(value)
-  },
-  onRowClick: function(evt, row){
-    // alert(row.name)
-    this.isHidden =false;
-    this.company_title = row.name;
-    this.company_details = 'Opening Price: '+ row.openingPrice +
-                           'Closing Price: ' + row.closingPrice;
+    },
+    onRowClick: function(evt, row){
+      // alert(row.name)
+      this.isHidden =false;
+      this.company_title = row.name;
+      this.company_details = 'Opening Price: '+ row.openingPrice +
+                            'Closing Price: ' + row.closingPrice;
 
-  },
-  addPredictedColumn: function(){
-    this.columns.push(
-      { name: 'predictedPrice', align: 'center', label: 'Predicted Closing Price', field: 'predictedPrice', sortable: true }
-    )
-    this.isAnalyticsHidden = true;
-  }
+    },
+    addPredictedColumn: function(){
+      this.columns.push(
+        { name: 'predictedPrice', align: 'center', label: 'Predicted Closing Price', field: 'predictedPrice', sortable: true }
+      )
+      this.isAnalyticsHidden = true;
+    },
+    deleteRow: function(props){
+      this.data.pop(props.row)
+    }
   },
   data(){
     return {
@@ -140,7 +141,7 @@ export default {
       medium: false,
       ohlc_chart: false,
       columns: [
-        { name: 'actions', label: 'Actions', field: '', align:'center' },
+        { name: 'actions', label: 'Remove', field: '', align:'center' },
         {
           name: 'name',
           required: true,
