@@ -62,7 +62,7 @@
         <q-dialog v-model="medium">
           <q-card style="width: 900px; max-width: 80vw;">
             <q-card-section>
-              <div class="text-h6">{{company_title}} - Open-High-Low-Close Chart</div>
+              <div class="text-h6">{{company_title}}</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
               <Chart/>
@@ -75,7 +75,7 @@
         <q-dialog v-model="ohlc_chart">
           <q-card style="width: 900px; max-width: 80vw;">
             <q-card-section>
-              <div class="text-h6">{{company_title}}</div>
+              <div class="text-h6">{{company_title}}  - Open/High/Low/Close Chart</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
               <ChartOHLC/>
