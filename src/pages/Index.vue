@@ -101,7 +101,11 @@ export default {
   methods: {
     changedValue: function(value) {
       this.select = 0;
-      if(this.data.includes(value)){
+      const duplicateValues = this.data.filter(element =>{
+        return element.name === value.name
+      });
+      
+      if(duplicateValues.length > 0){
           alert('Already selected!')
       }
       else {
