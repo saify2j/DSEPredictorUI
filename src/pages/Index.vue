@@ -24,7 +24,7 @@
         :columns='columns'
         row-key="name"
         @row-click="onRowClick"
-        style="position:absolute;width:37%"
+        style="position:absolute;width:700px;"
         >
         <template v-slot:header="props">
         <q-tr :props="props">
@@ -62,39 +62,44 @@
       <div class="col-4 col-md q-ml-md">
       <q-card  class="my-card text-black"> 
         <!-- v-if="!isHidden" -->
-      <q-card-section>
+      <q-card-section class="text-teal">
         <div class="text-h6">{{ company_title }}</div>
       </q-card-section>
       <q-card-section>
        <!-- <p> {{ company_details[0].name }} {{ company_details[0].value }}</p> -->
-      <ul>
-        <li v-for="item in company_details" v-bind:key="item.name">{{ item.name }} {{ item.value }}</li>
+      <ul style="padding-left:8%">
+        <li v-for="item in company_details" v-bind:key="item.name"><b>{{ item.name }}</b> {{ item.value }}</li>
       </ul>
       </q-card-section>
       <q-separator dark />
       <q-card-actions>
-        <q-btn flat v-if="!isHidden"  @click="medium = true">Bar</q-btn>
-        <q-btn flat v-if="!isHidden"  @click="ohlc_chart = true">OHLC</q-btn>
+        <q-btn flat text-color="secondary" v-if="!isHidden"  @click="medium = true">Bar</q-btn>
+        <q-btn flat text-color="secondary" v-if="!isHidden"  @click="ohlc_chart = true">OHLC</q-btn>
         <!-- <q-btn flat>Action 2</q-btn> -->
       </q-card-actions>
     </q-card>
-        <q-dialog v-model="medium">
-          <q-card style="width: 900px; max-width: 80vw;">
-            <q-card-section>
+        <q-dialog v-model="medium" style="height:600px;">
+          <q-card style="width: 1200px; max-width: 90vw;">
+            <q-card-section class="row items-center q-pb-none">
               <div class="text-h6">{{company_title}}</div>
+              <q-space />
+              <q-btn icon="close" flat round dense v-close-popup />
             </q-card-section>
             <q-card-section class="q-pt-none">
               <Chart/>
             </q-card-section>
             <q-card-actions align="right" class="bg-white text-teal">
               <q-btn flat label="OK" v-close-popup />
+              
             </q-card-actions>
           </q-card>
         </q-dialog>
-        <q-dialog v-model="ohlc_chart">
-          <q-card style="width: 900px; max-width: 80vw;">
-            <q-card-section>
+        <q-dialog v-model="ohlc_chart" style="height:600px;">
+          <q-card style="width: 1200px; max-width: 90vw;">
+            <q-card-section  class="row items-center q-pb-none">
               <div class="text-h6">{{company_title}}  - Open/High/Low/Close Chart</div>
+              <q-space />
+              <q-btn icon="close" flat round dense v-close-popup />
             </q-card-section>
             <q-card-section class="q-pt-none">
               <ChartOHLC/>
@@ -193,7 +198,7 @@ export default {
       cur_date : '10/03/2021',
       yes_date: '09/03/2021',
       company_title:'',
-      company_details:[{name: 'Select a company to see details!', value: null}],
+      company_details:[{name: 'Select a company from the table to see more details!', value: null}],
       isHidden: true,
       isAnalyticsHidden: true,
       medium: false,

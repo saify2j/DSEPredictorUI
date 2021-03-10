@@ -1,5 +1,5 @@
 <template>
-      <div class="row">
+      <div class="row" style="margin-top:-80px;">
         <div style="margin-left:5%" class="col-2"><q-btn push color="white" @click="fixed = true, category_name = 'Category A'" text-color="secondary" label="Category A" /></div>
         <div class="col-2"><q-btn push color="white" text-color="secondary"  label="Category B" @click="fixed = true, category_name = 'Category B'" /></div>
         <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category N" @click="fixed = true, category_name = 'Category N'" /></div>
