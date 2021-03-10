@@ -24,8 +24,22 @@
         :columns='columns'
         row-key="name"
         @row-click="onRowClick"
-        style="position:relative;width:100%"
+        style="position:absolute;width:37%"
         >
+        <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            {{ col.label }}
+            <p style="margin-top:0;" v-if="(col.label ==='Opening Price') || (col.label ==='Closing Price')">
+             {{ yes_date }}
+            </p>
+            <p style="margin-top:0;" v-if="(col.label ==='Predicted Closing Price')">
+             {{ cur_date }}
+            </p>
+            <p v-else></p>
+          </q-th>
+        </q-tr>
+      </template>
         <!-- style="position:relative;width:100%" -->
 
         <!-- <template v-if="!isAnalyticsHidden" v-slot:top-right>
@@ -119,6 +133,7 @@ export default {
             closingPrice: value.closingPrice,
             predictedPrice: value.predictedPrice
           })
+        this.data.reverse()
         this.isAnalyticsHidden = false;
       }
      //alert(value)
@@ -168,6 +183,8 @@ export default {
   },
   data(){
     return {
+      cur_date : '10/03/2021',
+      yes_date: '09/03/2021',
       company_title:'',
       company_details:'Select a company to see details!',
       isHidden: true,
@@ -175,17 +192,17 @@ export default {
       medium: false,
       ohlc_chart: false,
       columns: [
-        { name: 'actions', label: 'Remove', field: '', align:'center' },
+        { name: 'actions', label: 'Action', field: 'actions', align:'center' },
         {
           name: 'name',
           required: true,
           label: 'Company Name',
           align: 'left',
           field: row => row.name,
-          format: val => `${val}`,
-          sortable: true
+          format: val => `${val}`
+          
         },
-        { name: 'openingPrice', align: 'center', label: 'Opening Price', field: 'openingPrice', sortable: true },
+        { name: 'openingPrice', align: 'center', label: 'Opening Price', field: 'openingPrice', sortable: true, headerStyle: 'width: 110px' },
         { name: 'closingPrice', align: 'center', label: 'Closing Price', field: 'closingPrice', sortable: true },
         { name: 'predictedPrice', align: 'center', label: 'Predicted Closing Price', field: 'predictedPrice', sortable: true }
       ],

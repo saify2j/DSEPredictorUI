@@ -4,7 +4,7 @@
 
 #vs1__combobox{
     height: 50px;
-    border-radius: 10px;
+    border-radius: 7px;
 }
 .vs__actions{
     display: none;
@@ -14,10 +14,16 @@
     max-width: 250px;
 }
 #img-header{
-    margin-top:-200px;
-    margin-left:15%;
-    width: 60%;
+    margin-top:-300px;
+    margin-left:20%;
+    width: 50%;
 }
 .vs__search{
     color: grey;
+}
+
+.q-table th {
+    /* don't shorten cell contents */
+    //white-space: nowrap !important;
+    width: 110px !important;
 }
