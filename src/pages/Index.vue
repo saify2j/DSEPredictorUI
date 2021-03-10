@@ -66,7 +66,10 @@
         <div class="text-h6">{{ company_title }}</div>
       </q-card-section>
       <q-card-section>
-       <p> {{ company_details }} </p>
+       <!-- <p> {{ company_details[0].name }} {{ company_details[0].value }}</p> -->
+      <ul>
+        <li v-for="item in company_details" v-bind:key="item.name">{{ item.name }} {{ item.value }}</li>
+      </ul>
       </q-card-section>
       <q-separator dark />
       <q-card-actions>
@@ -145,10 +148,14 @@ export default {
       var company = this.companies.filter(obj => {
         return obj.name === row.name
       })
-      this.company_details = 'EMA12: '+ company[0].emA12 +
-                             '-EMA26: ' + company[0].emA26 +
-                             '-CMA: ' + company[0].cma +
-                             '-MACD: ' + company[0].macd;
+      // this.company_details = 'EMA12: '+ company[0].emA12 + 
+      //                        '-EMA26: ' + company[0].emA26 +
+      //                        '-CMA: ' + company[0].cma +
+      //                        '-MACD: ' + company[0].macd;
+      this.company_details = [{name: 'EMA12: ',value: company[0].emA12},
+                             {name: 'EMA26: ', value: company[0].emA26},
+                             {name: 'SMA: ', value: company[0].cma},
+                             {name: 'MACD: ', value: company[0].macd}];
 
     },
     deleteRow: function(props){
@@ -186,7 +193,7 @@ export default {
       cur_date : '10/03/2021',
       yes_date: '09/03/2021',
       company_title:'',
-      company_details:'Select a company to see details!',
+      company_details:[{name: 'Select a company to see details!', value: null}],
       isHidden: true,
       isAnalyticsHidden: true,
       medium: false,
