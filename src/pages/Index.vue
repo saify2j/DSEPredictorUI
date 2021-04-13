@@ -183,10 +183,10 @@ export default {
 
   },
   created(){
-    api.get('/getallcompanies')
+    api.get('/predictions')
       .then((response) => {
         console.log(JSON.stringify(response.data))
-        this.companies = response.data
+        //this.companies = response.data
       })
       .catch((err) => {
         alert(err)

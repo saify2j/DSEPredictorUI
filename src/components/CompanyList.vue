@@ -23,7 +23,7 @@
       </div>
 </template>
 <script>
-import axios from "axios";
+import { api } from 'boot/axios'
 export default {
   name: 'CompanyList',
   data () {
@@ -31,6 +31,28 @@ export default {
       fixed: false,
       category_name:'',
       companies: [
+        {
+            model: "main",
+            pk: "1",
+            fields: {
+                name: "amarnet",
+                trading_code: "asadsada",
+                sector: "asdasdas",
+                category: "AAAAAA"
+            }
+        },
+        {
+            model: "main",
+            pk: "12",
+            fields: {
+                name: "amarnet2",
+                trading_code: "asadsada",
+                sector: "asdasdas",
+                category: "AAAAA"
+            }
+        }
+      ],
+      companiesOld: [
         {
             model: "main",
             pk: "1",
@@ -91,12 +113,11 @@ export default {
       },
     },
   mounted () {
-    axios.get(`https://spm-stock-estimation.herokuapp.com/api/companies`, {
-        'Access-Control-Allow-Origin': '*',
-    })
+    api.get(`/companies`)
       .then((response) => {
         if(response.status === 200){
-          (console.log(response.data));
+          this.companies = JSON.parse(response.data.data);
+          //console.log(this.companies);
         }
         else
         {
