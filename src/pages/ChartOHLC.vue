@@ -1,7 +1,11 @@
 <template>
   <div id="chart">
-        <apexchart type="candlestick" height="600" :options="chartOptions" :series="series"></apexchart>
-      </div>
+    <apexchart type="candlestick" height="600" :options="chartOptions" :series="series"></apexchart>
+    <ul class="my-list">
+      <li class="my-list-item"><span class="dot-green"></span>Upward trending</li>
+      <li class="my-list-item"><span class="dot-red"></span>Downward trending</li>
+    </ul>
+  </div>
 </template>
 <script>
 export default {
