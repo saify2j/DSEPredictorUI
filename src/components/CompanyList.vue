@@ -1,18 +1,18 @@
 <template>
       <div class="row" style="margin-top:-80px;">
-        <div style="margin-left:5%" class="col-2"><q-btn push color="white" @click="fixed = true, category_name = 'Category A'" text-color="secondary" label="Category A" /></div>
-        <div class="col-2"><q-btn push color="white" text-color="secondary"  label="Category B" @click="fixed = true, category_name = 'Category B'" /></div>
-        <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category N" @click="fixed = true, category_name = 'Category N'" /></div>
-        <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category G" @click="fixed = true, category_name = 'Category G'" /></div>
-        <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category Z" @click="fixed = true, category_name = 'Category Z'" /></div>
+        <div style="margin-left:5%" class="col-2"><q-btn push color="white" @click="fixed = true, category_name = 'A'" text-color="secondary" label="Category A" /></div>
+        <div class="col-2"><q-btn push color="white" text-color="secondary"  label="Category B" @click="fixed = true, category_name = 'B'" /></div>
+        <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category N" @click="fixed = true, category_name = 'N'" /></div>
+        <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category G" @click="fixed = true, category_name = 'G'" /></div>
+        <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category Z" @click="fixed = true, category_name = 'Z'" /></div>
         <q-dialog v-model="fixed">
             <q-card>
                 <q-card-section>
-                    <div class="text-h6">List of companies in {{ category_name }}</div>
+                    <div class="text-h6">List of companies in Category {{ category_name }}</div>
                 </q-card-section>
                 <q-separator />
                 <q-card-section style="width:500px;max-height: 50vh" class="scroll">
-                    <p v-for="n in 15" :key="n">Company {{ n }}</p>
+                    <p v-for="company in loadCompanies(category_name)" :key="company.pk">{{company.fields.name}}</p>
                 </q-card-section>
                 <q-separator />
                 <q-card-actions align="right">
@@ -23,13 +23,86 @@
       </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   name: 'CompanyList',
   data () {
     return {
       fixed: false,
       category_name:'',
+      companies: [
+        {
+            model: "main",
+            pk: "1",
+            fields: {
+                name: "amarnet",
+                trading_code: "asadsada",
+                sector: "asdasdas",
+                category: "A"
+            }
+        },
+        {
+            model: "main",
+            pk: "12",
+            fields: {
+                name: "amarnet2",
+                trading_code: "asadsada",
+                sector: "asdasdas",
+                category: "A"
+            }
+        },
+        {
+            model: "main",
+            pk: "13",
+            fields: {
+                name: "amarnet3",
+                trading_code: "asadsada",
+                sector: "asdasdas",
+                category: "B"
+            }
+        },
+        {
+            model: "main",
+            pk: "143",
+            fields: {
+                name: "amarnet4",
+                trading_code: "asadsada",
+                sector: "asdasdas",
+                category: "B"
+            }
+        },
+        {
+            model: "main",
+            pk: "133",
+            fields: {
+                name: "amarnet5",
+                trading_code: "asadsada",
+                sector: "asdasdas",
+                category: "B"
+            }
+        },
+    ],
     }
+  },
+  methods: {
+      loadCompanies(category){
+        //console.log(this.companies.filter(x => x.fields.category === category)) 
+        return this.companies.filter(x => x.fields.category === category);
+      },
+    },
+  mounted () {
+    axios.get(`https://spm-stock-estimation.herokuapp.com/api/companies`, {
+        'Access-Control-Allow-Origin': '*',
+    })
+      .then((response) => {
+        if(response.status === 200){
+          (console.log(response.data));
+        }
+        else
+        {
+          console.log("data load failed");
+        }
+      })
   }
 }
 </script>
