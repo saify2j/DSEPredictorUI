@@ -137,9 +137,9 @@ export default {
       else {
         this.data.push({
             name: value.name,
-            openingPrice: value.openingPrice,
-            closingPrice: value.closingPrice,
-            predictedPrice: value.predictedPrice
+            openingPrice: value.yesterdays_closing_price,
+            closingPrice: value.closing_price,
+            predictedPrice: value.predicted_next_day_ohlc_price
           })
         this.data.reverse()
         this.isAnalyticsHidden = false;
@@ -183,15 +183,27 @@ export default {
 
   },
   created(){
-    api.get('/predictions')
-      .then((response) => {
-        console.log(JSON.stringify(response.data))
-        //this.companies = response.data
-      })
-      .catch((err) => {
-        alert(err)
-      })
+    // api.get('/predictions')
+    //   .then((response) => {
+    //     console.log(JSON.stringify(response.data))
+    //     if(response.status === 200){
+    //        this.companies = JSON.parse(response.data.data);
+    //        this.yes_date = new Date(this.companies[0].parsed_date).getDate();
+    //        this.cur_date = new Date(this.yes_date.getHours() + 24);
+    //     }
+    //     //this.companies = response.data
+    //   })
+    //   .catch((err) => {
+    //     alert(err)
+    //   })
 
+  },
+  mounted(){
+    var date = new Date(this.companies[0].parsed_date);
+    this.yes_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
+    date = new Date(date.getTime() + 1*24*60*60*1000);
+    this.cur_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
+    // this.cur_date = new Date(this.yes_date.getDays() + 1);
   },
   data(){
     return {
@@ -219,10 +231,85 @@ export default {
         { name: 'predictedPrice', align: 'center', label: 'Predicted Closing Price', field: 'predictedPrice', sortable: true }
       ],
       data: [
-       
+        
       ],
       companies:[
-       
+        {
+          trading_code: "1JANATAMF",
+          parsed_date: "2021-04-12T18:00:00.000+00:00",
+          last_traded_price: "5.100",
+          high : "5.100",
+          low: "4.900",
+          closing_price: "4.900",
+          predicted_next_day_ohlc_price: "4.993",
+          yesterdays_closing_price:"5.100",
+          change: "4.900",
+          trade: 67,
+          value_mn: "1.391",
+          volume: "277458.000",
+          name: "Comapany A",
+          emA12: 1,
+          emA26: 2,
+          cma: 3,
+          macd: 4
+        },
+        {
+          trading_code: "1JANATAMF",
+          parsed_date: "2021-04-12T18:00:00.000+00:00",
+          last_traded_price: "5.100",
+          high : "5.100",
+          low: "4.900",
+          closing_price: "4.900",
+          predicted_next_day_ohlc_price: "4.993",
+          yesterdays_closing_price:"5.100",
+          change: "4.900",
+          trade: 67,
+          value_mn: "1.391",
+          volume: "277458.000",
+          name: "Comapany B",
+          emA12: 1,
+          emA26: 2,
+          cma: 3,
+          macd: 4
+        },
+        {
+          trading_code: "1JANATAMF",
+          parsed_date: "2021-04-12T18:00:00.000+00:00",
+          last_traded_price: "5.100",
+          high : "5.100",
+          low: "4.900",
+          closing_price: "4.900",
+          predicted_next_day_ohlc_price: "4.993",
+          yesterdays_closing_price:"5.100",
+          change: "4.900",
+          trade: 67,
+          value_mn: "1.391",
+          volume: "277458.000",
+          name: "Comapany C",
+          emA12: 1,
+          emA26: 2,
+          cma: 3,
+          macd: 4
+        },
+        {
+          trading_code: "1JANATAMF",
+          parsed_date: "2021-04-12T18:00:00.000+00:00",
+          last_traded_price: "5.100",
+          high : "5.100",
+          low: "4.900",
+          closing_price: "4.900",
+          predicted_next_day_ohlc_price: "4.993",
+          yesterdays_closing_price:"5.100",
+          change: "4.900",
+          trade: 67,
+          value_mn: "1.391",
+          volume: "277458.000",
+          name: "Comapany D",
+          emA12: 1,
+          emA26: 2,
+          cma: 3,
+          macd: 4
+        }, 
       ]
     }
   }
