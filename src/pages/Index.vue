@@ -98,7 +98,7 @@
               <q-btn icon="close" flat round dense v-close-popup />
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <ChartOHLC/>
+              <ChartOHLC :trading_code = "trading_code"/>
             </q-card-section>
             <q-card-actions align="right" class="bg-white text-teal">
               <q-btn flat label="OK" v-close-popup />
