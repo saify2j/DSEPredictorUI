@@ -6,7 +6,7 @@
         <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category G" @click="fixed = true, category_name = 'G'" /></div>
         <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category Z" @click="fixed = true, category_name = 'Z'" /></div>
         <q-dialog v-model="fixed">
-            <q-card v-if="isLoaded">
+            <q-card v-if="this.companies.length > 0">
                 <q-card-section>
                     <div class="text-h6">List of companies in Category {{ category_name }}</div>
                 </q-card-section>
@@ -19,7 +19,7 @@
                     <q-btn flat label="Ok" color="secondary" v-close-popup />
                 </q-card-actions>
             </q-card>
-            <q-skeleton v-else size="200px" class="bg-grey"/>
+            <q-skeleton v-else width="400px" class="bg-grey"/>
         </q-dialog>
       </div>
 </template>
@@ -27,12 +27,11 @@
 import { api } from 'boot/axios'
 export default {
   name: 'CompanyList',
+  props: ['companies'],
   data () {
     return {
       fixed: false,
       category_name:'',
-      companies: [
-      ],
       isLoaded: false,
       companiesOld: [
         {
@@ -91,11 +90,13 @@ export default {
   methods: {
       loadCompanies(category){
         //console.log(this.companies.filter(x => x.fields.category === category)) 
+        if(this.companies)
+          this.isLoaded = true;
         return this.companies.filter(x => x.fields.category === category);
       },
     },
   mounted () {
-    api.get(`/companies`)
+    /*api.get(`/companies`)
       .then((response) => {
         if(response.status === 200){
           this.companies = JSON.parse(response.data.data);
@@ -106,7 +107,7 @@ export default {
         {
           console.log("data load failed");
         }
-      })
+      });*/
   }
 }
 </script>

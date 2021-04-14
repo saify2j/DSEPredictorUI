@@ -9,12 +9,14 @@
          >
       </div>
     </div>
-    <CompanyList/>
+    <CompanyList :companies="companiesWithName"
+    />
     <div class="row q-mt-md"> 
-      <div class="col-12" style="width:70%;margin-left:10%" >
+      <div v-if="isLoaded" class="col-12" style="width:70%;margin-left:10%" >
         <v-select prepend-icon="edit"  :clearable="false" @input='changedValue' :options='companies' label="name" placeholder="Select Companies">
         </v-select>
       </div>
+      <q-skeleton v-else style="width:70%;margin-left:10%" class="bg-grey col-12"/>
     </div>
     <div class="row q-mt-md">
       <div class="col-8">
@@ -154,10 +156,10 @@ export default {
       //                        '-CMA: ' + company[0].cma +
       //                        '-MACD: ' + company[0].macd;
       this.trading_code = company[0].trading_code;
-      this.company_details = [{name: 'EMA12: ',value: company[0].emA12},
-                             {name: 'EMA26: ', value: company[0].emA26},
-                             {name: 'SMA: ', value: company[0].cma},
-                             {name: 'MACD: ', value: company[0].macd}];
+      this.company_details = [{name: 'Opening Price: ',value: company[0].yesterdays_closing_price},
+                             {name: 'High Price: ', value: company[0].high},
+                             {name: 'Low Price: ', value: company[0].low},
+                             {name: 'Closing Price: ', value: company[0].closing_price}];
 
     },
     deleteRow: function(props){
@@ -194,25 +196,64 @@ export default {
 
   },
   created(){
-     /*api.get('/predictions')
-       .then((response) => {
-         console.log(JSON.stringify(response.data))
-         if(response.status === 200){
-            this.companies = JSON.parse(response.data.data);
-            var date = new Date(this.companies[0].parsed_date);
-            this.yes_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
-            date = new Date(date.getTime() + 1*24*60*60*1000);
-            this.cur_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
+    api.get(`/companies`)
+      .then((response) => {
+        if(response.status === 200){
+          this.companiesWithName = JSON.parse(response.data.data);
+          //console.log(this.companiesWithName);
+          api.get('/predictions')
+              .then((response) => {
+                //console.log(JSON.stringify(response.data))
+                if(response.status === 200){
+                    var data = JSON.parse(response.data.data);
+                    var date = new Date(data[0].fields.parsed_date);
+                    this.yes_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
+                    date = new Date(date.getTime() + 1*24*60*60*1000);
+                    this.cur_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
+
+                    data.forEach((element) =>
+                    {
+                      let company = {
+                        trading_code: element.fields.trading_code,
+                        high: element.fields.high,
+                        low: element.fields.low,
+                        predicted_next_day_ohlc_price: element.fields.predicted_next_day_ohlc_price,
+                        yesterdays_closing_price: element.fields.yesterdays_closing_price,
+                        closing_price: element.fields.closing_price,
+                        name: "",
+                        ohlc: 0,
+                        marketChange: 0
+                      };                     
+                      company.ohlc = this.calcultaeOHLC(company);
+                      company.marketChange = this.calcultaeMarketChange(company);
+
+                      //console.log(company.trading_code);
+                      let companyName = this.companiesWithName.filter(x => x.fields.trading_code === company.trading_code);
+                      //console.log("aasaaa\n"+companyName[0]);
+                      if(companyName && companyName.length > 0)
+                      {
+                        company.name = companyName[0].fields.name +" ("+companyName[0].fields.category+")";
+                        this.companies.push(company);
+                      }
+                      //console.log(company);
+                    });
+
+                    this.isLoaded = true;
          }
-         //this.companies = response.data
        })
        .catch((err) => {
          alert(err)
-       })*/
+       });
+        }
+        else
+        {
+          console.log("data load failed");
+        }
+      });
 
   },
   mounted(){
-    var date = new Date(this.companies[0].parsed_date);
+    /*var date = new Date(this.companies[0].parsed_date);
     this.yes_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
     date = new Date(date.getTime() + 1*24*60*60*1000);
     this.cur_date = date.getUTCDate() + '-' + (date.getUTCMonth()+1) + '-' + date.getUTCFullYear();
@@ -220,14 +261,14 @@ export default {
     this.companies.forEach((company) => {
         company.ohlc = this.calcultaeOHLC(company);
         company.marketChange = this.calcultaeMarketChange(company);
-    });
+    });*/
 
     // this.cur_date = new Date(this.yes_date.getDays() + 1);
   },
   data(){
     return {
-      cur_date : '10/03/2021',
-      yes_date: '09/03/2021',
+      cur_date : '',
+      yes_date: '',
       company_title:'',
       trading_code: '',
       company_details:[{name: 'Select a company from the table to see more details!', value: null}],
@@ -259,92 +300,9 @@ export default {
       data: [
         
       ],
-      companies:[
-        {
-          trading_code: "1JANATAMF",
-          parsed_date: "2021-04-12T18:00:00.000+00:00",
-          last_traded_price: "5.100",
-          high : "5.100",
-          low: "4.900",
-          closing_price: "4.900",
-          predicted_next_day_ohlc_price: "4.993",
-          yesterdays_closing_price:"5.100",
-          change: "4.900",
-          trade: 67,
-          value_mn: "1.391",
-          volume: "277458.000",
-          name: "Comapany A",
-          emA12: 1,
-          emA26: 2,
-          cma: 3,
-          macd: 4,
-          ohlc: 0,
-          marketChange: 0
-        },
-        {
-          trading_code: "AAMRANET",
-          parsed_date: "2021-04-12T18:00:00.000+00:00",
-          last_traded_price: "5.100",
-          high : "5.100",
-          low: "4.900",
-          closing_price: "4.900",
-          predicted_next_day_ohlc_price: "4.993",
-          yesterdays_closing_price:"4.5",
-          change: "4.900",
-          trade: 67,
-          value_mn: "1.391",
-          volume: "277458.000",
-          name: "Comapany B",
-          emA12: 1,
-          emA26: 2,
-          cma: 3,
-          macd: 4,
-          ohlc: 0,
-          marketChange: 0
-        },
-        {
-          trading_code: "AAMRATECH",
-          parsed_date: "2021-04-12T18:00:00.000+00:00",
-          last_traded_price: "5.100",
-          high : "5.100",
-          low: "4.900",
-          closing_price: "4.900",
-          predicted_next_day_ohlc_price: "4.993",
-          yesterdays_closing_price:"5.100",
-          change: "4.900",
-          trade: 67,
-          value_mn: "1.391",
-          volume: "277458.000",
-          name: "Comapany C",
-          emA12: 1,
-          emA26: 2,
-          cma: 3,
-          macd: 4,
-          ohlc: 0,
-          marketChange: 0
-        },
-        {
-          trading_code: "ABB1STMF",
-          parsed_date: "2021-04-12T18:00:00.000+00:00",
-          last_traded_price: "5.100",
-          high : "5.100",
-          low: "4.900",
-          closing_price: "4.900",
-          predicted_next_day_ohlc_price: "4.993",
-          yesterdays_closing_price:"5.100",
-          change: "4.900",
-          trade: 67,
-          value_mn: "1.391",
-          volume: "277458.000",
-          name: "Comapany D",
-          emA12: 1,
-          emA26: 2,
-          cma: 3,
-          macd: 4,
-          ohlc: 0,
-          marketChange: 0
-        }, 
-      ]
+      companiesWithName: [],
+      companies:[],
+      isLoaded: false
     }
   }
 }

@@ -90,7 +90,7 @@ export default {
         {
           console.log("data load failed");
         }
-      })
+      });
   }
 }
 </script>
