@@ -6,6 +6,9 @@
       <li class="my-list-item"><span class="dot-red"></span>Downward trending</li>
     </ul>
   </div>
+  <div v-else>
+      <q-skeleton class="bg-grey"/>
+  </div>
 </template>
 <script>
 import { api } from 'boot/axios'
@@ -44,7 +47,7 @@ export default {
         if(response.status === 200){
           var data = JSON.parse(response.data.data);
           data = data.reverse();
-          console.log(data);
+          //console.log(data);
           data.forEach(element => {
             var date = new Date(element.fields.parsed_date);
             // date = date.getUTCDate()+"-"+months[date.getUTCMonth()];

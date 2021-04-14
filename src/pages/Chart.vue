@@ -2,6 +2,9 @@
   <div v-if="isLoaded" class="example">
     <apexchart height="600" type="line" :options="chartOptions" :series="series"></apexchart>
   </div>
+    <div v-else>
+      <q-skeleton class="bg-grey"/>
+  </div>
 </template>
 
 <script>

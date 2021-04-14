@@ -6,7 +6,7 @@
         <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category G" @click="fixed = true, category_name = 'G'" /></div>
         <div class="col-2"><q-btn push color="white" text-color="secondary" label="Category Z" @click="fixed = true, category_name = 'Z'" /></div>
         <q-dialog v-model="fixed">
-            <q-card>
+            <q-card v-if="isLoaded">
                 <q-card-section>
                     <div class="text-h6">List of companies in Category {{ category_name }}</div>
                 </q-card-section>
@@ -19,6 +19,7 @@
                     <q-btn flat label="Ok" color="secondary" v-close-popup />
                 </q-card-actions>
             </q-card>
+            <q-skeleton v-else size="200px" class="bg-grey"/>
         </q-dialog>
       </div>
 </template>
@@ -31,27 +32,8 @@ export default {
       fixed: false,
       category_name:'',
       companies: [
-        {
-            model: "main",
-            pk: "1",
-            fields: {
-                name: "amarnet",
-                trading_code: "asadsada",
-                sector: "asdasdas",
-                category: "AAAAAA"
-            }
-        },
-        {
-            model: "main",
-            pk: "12",
-            fields: {
-                name: "amarnet2",
-                trading_code: "asadsada",
-                sector: "asdasdas",
-                category: "AAAAA"
-            }
-        }
       ],
+      isLoaded: false,
       companiesOld: [
         {
             model: "main",
@@ -118,6 +100,7 @@ export default {
         if(response.status === 200){
           this.companies = JSON.parse(response.data.data);
           //console.log(this.companies);
+          this.isLoaded = true;
         }
         else
         {
